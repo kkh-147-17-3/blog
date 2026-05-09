@@ -21,66 +21,41 @@ export function DiaryTimeline({ list }: { list: Post[] }) {
   };
 
   return (
-    <section style={{ padding: 'var(--s-4) 0 0' }}>
-      {months.map((ym, mi) => (
-        <div key={ym} className="diary-row" style={{
-          display: 'grid',
-          gridTemplateColumns: '120px 1fr',
-          gap: 'var(--s-8)',
-          padding: 'var(--s-8) 0',
-          borderTop: mi === 0 ? 0 : '1px solid var(--rule-soft)',
-        }}>
-          <div style={{ position: 'sticky', top: 80, alignSelf: 'start' }}>
-            <div className="t-display" style={{
-              fontSize: 'var(--t-lg)', fontWeight: 600,
-              letterSpacing: '-0.02em', lineHeight: 1.2,
-            }}>
+    <section className="pt-4">
+      {months.map((ym) => (
+        <div
+          key={ym}
+          className="diary-row grid grid-cols-[120px_1fr] gap-8 py-8 border-t border-rule-soft first:border-t-0"
+        >
+          <div className="sticky top-20 self-start">
+            <div className="t-display text-lg font-semibold tracking-display leading-tight">
               {monthLabel(ym)}
             </div>
-            <div className="t-mono" style={{ fontSize: 11, color: 'var(--ink-3)', marginTop: 4 }}>
+            <div className="t-mono text-[11px] text-ink-3 mt-1">
               {groups[ym].length} 편
             </div>
           </div>
 
-          <div style={{
-            position: 'relative',
-            paddingLeft: 'var(--s-6)',
-            borderLeft: '1px solid var(--rule)',
-          }}>
+          <div className="relative pl-6 border-l border-rule">
             {groups[ym].map((p, i) => {
               const day = p.publishedAt ? new Date(p.publishedAt).getDate() : '—';
               return (
                 <Link
                   key={p.slug}
                   href={`/${catSlug(p.category)}/${p.slug}`}
-                  style={{
-                    display: 'block',
-                    position: 'relative',
-                    padding: 'var(--s-3) 0 var(--s-5)',
-                    borderTop: i === 0 ? 0 : '1px dashed var(--rule-soft)',
-                  }}
+                  className={`block relative pb-5 pt-3 ${i === 0 ? '' : 'border-t border-dashed border-rule-soft'}`}
                 >
-                  <span style={{
-                    position: 'absolute',
-                    left: 'calc(var(--s-6) * -1 - 4.5px)',
-                    top: i === 0 ? 18 : 22,
-                    width: 8, height: 8, borderRadius: '50%',
-                    background: 'var(--cat-diary)',
-                  }} />
-                  <div className="t-meta" style={{ marginBottom: 4 }}>
+                  <span
+                    className={`absolute w-2 h-2 rounded-full bg-cat-diary -left-[28.5px] ${i === 0 ? 'top-[18px]' : 'top-[22px]'}`}
+                  />
+                  <div className="t-meta mb-1">
                     <span className="t-mono">{day}일</span>
                     <span className="dot" />
                     <span>{p.readMinutes}분</span>
                   </div>
-                  <div className="t-display" style={{
-                    fontSize: 'var(--t-lg)', fontWeight: 500,
-                    letterSpacing: '-0.015em', marginBottom: 4,
-                  }}>{p.title}</div>
+                  <div className="t-display text-lg font-medium tracking-[-0.015em] mb-1">{p.title}</div>
                   {p.excerpt && (
-                    <div style={{
-                      fontSize: 'var(--t-sm)', color: 'var(--ink-2)',
-                      lineHeight: 1.7,
-                    }}>{p.excerpt}</div>
+                    <div className="text-sm text-ink-2 leading-[1.7]">{p.excerpt}</div>
                   )}
                 </Link>
               );

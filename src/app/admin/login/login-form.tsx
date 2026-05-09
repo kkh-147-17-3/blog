@@ -16,9 +16,8 @@ function SubmitBtn() {
   return (
     <button
       type="submit"
-      className="btn solid"
+      className="btn solid mt-2 justify-center"
       disabled={pending}
-      style={{ marginTop: 'var(--s-2)', justifyContent: 'center' }}
     >
       {pending ? '로그인 중…' : '로그인'}
     </button>
@@ -29,17 +28,17 @@ export function LoginForm() {
   const [state, formAction] = useActionState<State, FormData>(action, {});
 
   return (
-    <form action={formAction} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
+    <form action={formAction} className="flex flex-col gap-3">
       <div>
-        <label className="t-meta-up" style={{ display: 'block', marginBottom: 6 }}>이메일</label>
+        <label className="t-meta-up block mb-[6px]">이메일</label>
         <input className="input" name="email" type="email" autoComplete="email" required />
       </div>
       <div>
-        <label className="t-meta-up" style={{ display: 'block', marginBottom: 6 }}>비밀번호</label>
+        <label className="t-meta-up block mb-[6px]">비밀번호</label>
         <input className="input" name="password" type="password" autoComplete="current-password" required />
       </div>
       {state.error && (
-        <div className="t-meta" style={{ color: 'var(--cat-diary)' }}>{state.error}</div>
+        <div className="t-meta text-cat-diary">{state.error}</div>
       )}
       <SubmitBtn />
     </form>

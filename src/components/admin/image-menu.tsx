@@ -72,8 +72,8 @@ export function ImageMenu({ editor }: { editor: Editor | null }) {
 
   return (
     <div
-      className="image-menu"
-      style={{ top: pos.top, left: pos.left, transform: 'translateX(-50%)' }}
+      className="image-menu -translate-x-1/2"
+      style={{ top: pos.top, left: pos.left }}
     >
       <div className="image-menu-row">
         {btn('작게', attrs.size === 'sm', () => setSize('sm'))}

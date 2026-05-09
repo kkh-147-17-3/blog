@@ -38,44 +38,24 @@ export function CommentForm({ slug }: { slug: string }) {
   return (
     <form
       onSubmit={submit}
-      style={{
-        border: '1px solid var(--rule)',
-        borderRadius: 'var(--r-md)',
-        padding: 'var(--s-4)',
-        marginBottom: 'var(--s-5)',
-        background: 'var(--bg-tint)',
-      }}
+      className="border border-rule rounded-md p-4 mb-5 bg-bg-tint"
     >
       <input
         placeholder="닉네임 (선택)"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        style={{
-          width: '100%', background: 'transparent', border: 0,
-          borderBottom: '1px solid var(--rule-soft)',
-          padding: '6px 0', fontSize: 'var(--t-sm)',
-          color: 'var(--ink)', outline: 'none', fontFamily: 'inherit',
-        }}
+        className="w-full bg-transparent border-0 border-b border-rule-soft py-[6px] px-0 text-sm text-ink outline-none [font-family:inherit]"
       />
       <textarea
         placeholder="이 글에 대한 생각을 남겨주세요…"
         rows={3}
         value={text}
         onChange={(e) => setText(e.target.value)}
-        style={{
-          width: '100%', marginTop: 10, background: 'transparent',
-          border: 0, resize: 'vertical', padding: 0,
-          fontSize: 'var(--t-sm)', lineHeight: 1.7,
-          color: 'var(--ink)', outline: 'none',
-          fontFamily: 'inherit', minHeight: 64,
-        }}
+        className="w-full mt-[10px] bg-transparent border-0 resize-y p-0 text-sm leading-[1.7] text-ink outline-none [font-family:inherit] min-h-[64px]"
       />
-      <div style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--rule-soft)',
-      }}>
+      <div className="flex justify-between items-center mt-2 pt-2 border-t border-rule-soft">
         <span className="t-meta">
-          {err ? <span style={{ color: 'var(--cat-diary)' }}>{err}</span>
+          {err ? <span className="text-cat-diary">{err}</span>
                : '익명으로 남기면 닉네임은 비워두셔도 돼요.'}
         </span>
         <button type="submit" className="btn sm" disabled={busy || !text.trim()}>

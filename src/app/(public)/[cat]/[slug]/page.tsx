@@ -39,26 +39,18 @@ export default async function DetailPage({ params }: { params: Promise<Params> }
   ]);
 
   return (
-    <article className="screen container-wide" style={{ paddingTop: 'var(--s-12)' }}>
+    <article className="screen container-wide pt-12">
       <DetailCatBinder cat={post.category} />
       <ViewPinger slug={post.slug} />
 
-      <div className="layout-detail" style={{
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1fr) 200px',
-        gap: 'var(--s-16)',
-        alignItems: 'start',
-      }}>
-        <div style={{ maxWidth: 640, justifySelf: 'center', width: '100%' }}>
-          <header style={{ marginBottom: 'var(--s-8)' }}>
-            <div style={{ marginBottom: 'var(--s-4)' }}><CatLabel cat={post.category} /></div>
-            <h1 className="t-display" style={{
-              margin: 0, fontSize: 'var(--t-3xl)',
-              lineHeight: 1.15, letterSpacing: '-0.025em',
-            }}>
+      <div className="layout-detail grid grid-cols-[minmax(0,1fr)_200px] gap-16 items-start">
+        <div className="max-w-[640px] justify-self-center w-full">
+          <header className="mb-8">
+            <div className="mb-4"><CatLabel cat={post.category} /></div>
+            <h1 className="t-display m-0 text-3xl leading-[1.15] tracking-[-0.025em]">
               {post.title}
             </h1>
-            <div className="card-meta" style={{ marginTop: 'var(--s-5)' }}>
+            <div className="card-meta mt-5">
               <span>{post.publishedAt ? fmtDate(post.publishedAt) : '—'}</span>
               <span className="dot" />
               <span>{post.readMinutes}분</span>
@@ -69,43 +61,31 @@ export default async function DetailPage({ params }: { params: Promise<Params> }
 
           <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
 
-          <div style={{
-            marginTop: 'var(--s-12)', paddingTop: 'var(--s-6)',
-            borderTop: '1px solid var(--rule)',
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            flexWrap: 'wrap', gap: 'var(--s-3)',
-          }}>
-            <div style={{ display: 'flex', gap: 8 }}>
+          <div className="mt-12 pt-6 border-t border-rule flex justify-between items-center flex-wrap gap-3">
+            <div className="flex gap-2">
               <LikeButton slug={post.slug} initial={post.likes} />
               <ShareButtons title={post.title} />
             </div>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            <div className="flex gap-[6px] flex-wrap">
               {post.tags.map((t) => <span key={t} className="chip">#{t}</span>)}
             </div>
           </div>
 
           {related.length > 0 && (
-            <section style={{ marginTop: 'var(--s-16)' }}>
-              <h3 className="t-display" style={{ margin: '0 0 var(--s-3)', fontSize: 'var(--t-lg)' }}>
+            <section className="mt-16">
+              <h3 className="t-display m-0 mb-3 text-lg">
                 같은 카테고리의 다른 글
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--s-4)' }}>
+              <div className="grid grid-cols-2 gap-4">
                 {related.map((r) => (
                   <Link
                     key={r.slug}
                     href={`/${catSlug(r.category)}/${r.slug}`}
-                    style={{
-                      padding: 'var(--s-4) var(--s-5)',
-                      border: '1px solid var(--rule)', borderRadius: 'var(--r-md)',
-                      transition: 'background 150ms',
-                    }}
+                    className="py-4 px-5 border border-rule rounded-md transition-[background] duration-150"
                   >
                     <CatLabel cat={r.category} />
-                    <div className="t-display" style={{
-                      fontSize: 'var(--t-md)', fontWeight: 600,
-                      marginTop: 6, lineHeight: 1.4,
-                    }}>{r.title}</div>
-                    <div className="t-meta" style={{ marginTop: 4 }}>
+                    <div className="t-display text-md font-semibold mt-[6px] leading-snug">{r.title}</div>
+                    <div className="t-meta mt-1">
                       {r.publishedAt ? fmtDate(r.publishedAt) : '—'} · {r.readMinutes}분
                     </div>
                   </Link>
@@ -114,23 +94,23 @@ export default async function DetailPage({ params }: { params: Promise<Params> }
             </section>
           )}
 
-          <section style={{ marginTop: 'var(--s-12)' }}>
-            <h3 className="t-display" style={{ margin: '0 0 var(--s-4)', fontSize: 'var(--t-lg)' }}>
-              댓글 <span style={{ color: 'var(--ink-3)', fontWeight: 400 }}>{comments.length}</span>
+          <section className="mt-12">
+            <h3 className="t-display m-0 mb-4 text-lg">
+              댓글 <span className="text-ink-3 font-normal">{comments.length}</span>
             </h3>
 
             <CommentForm slug={post.slug} />
 
             {comments.map((c) => (
-              <div key={c.id} style={{ padding: 'var(--s-4) 0', borderTop: '1px solid var(--rule-soft)' }}>
-                <div className="card-meta" style={{ margin: 0, marginBottom: 4 }}>
-                  <strong style={{ color: 'var(--ink)', fontWeight: 500 }}>
+              <div key={c.id} className="py-4 border-t border-rule-soft">
+                <div className="card-meta m-0 mb-1">
+                  <strong className="text-ink font-medium">
                     {c.authorName || '익명'}
                   </strong>
                   <span className="dot" />
                   <span>{fmtDateShort(c.createdAt)}</span>
                 </div>
-                <div style={{ fontSize: 'var(--t-sm)', color: 'var(--ink-2)', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                <div className="text-sm text-ink-2 leading-[1.7] whitespace-pre-wrap">
                   {c.content}
                 </div>
               </div>

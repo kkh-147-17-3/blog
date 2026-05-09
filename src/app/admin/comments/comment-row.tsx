@@ -10,7 +10,7 @@ export function CommentRow({ id, status }: { id: string; status: CommentStatus }
     start(async () => { await setCommentStatus(id, next); });
 
   return (
-    <div style={{ display: 'flex', gap: 6 }}>
+    <div className="flex gap-[6px]">
       {status !== 'VISIBLE' && (
         <button className="btn sm" onClick={() => set('VISIBLE')} disabled={pending}>복원</button>
       )}

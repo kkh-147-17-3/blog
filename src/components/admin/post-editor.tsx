@@ -9,7 +9,7 @@ import type { Category, PostStatus } from '@/lib/types';
 
 const TiptapEditor = dynamic(
   () => import('./tiptap-editor').then((m) => m.TiptapEditor),
-  { ssr: false, loading: () => <div style={{ color: 'var(--ink-3)', padding: 'var(--s-5) 0' }}>에디터 로딩 중…</div> },
+  { ssr: false, loading: () => <div className="text-ink-3 py-5">에디터 로딩 중…</div> },
 );
 
 interface Initial {
@@ -135,8 +135,8 @@ export function PostEditor({ mode, initial }: Props) {
           <div className="crumb">{mode === 'new' ? '새 글' : '글 수정'}</div>
           <h1>{state.title || (mode === 'new' ? '제목 없음' : '글 수정')}</h1>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          {err && <span className="t-meta" style={{ color: 'var(--cat-diary)' }}>{err}</span>}
+        <div className="flex gap-2 items-center">
+          {err && <span className="t-meta text-cat-diary">{err}</span>}
           {mode === 'edit' && !fullscreen && (
             <button type="button" className="btn ghost" onClick={() => router.push('/admin/posts')}>
               ← 목록

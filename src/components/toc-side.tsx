@@ -45,11 +45,7 @@ export function TocSide({ items, likes, views }: { items: TocItem[]; likes: numb
           </li>
         ))}
       </ul>
-      <div style={{
-        marginTop: 'var(--s-5)', paddingTop: 'var(--s-3)',
-        borderTop: '1px solid var(--rule-soft)',
-        display: 'flex', gap: 12, fontSize: 11, color: 'var(--ink-3)',
-      }}>
+      <div className="mt-5 pt-3 border-t border-rule-soft flex gap-3 text-[11px] text-ink-3">
         <span>♡ {likes}</span>
         <span>👁 {views}</span>
       </div>

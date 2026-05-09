@@ -9,8 +9,8 @@ export default async function HomePage() {
 
   if (posts.length === 0) {
     return (
-      <div className="screen container" style={{ padding: 'var(--s-20) 0' }}>
-        <p style={{ color: 'var(--ink-3)' }}>아직 발행된 글이 없습니다.</p>
+      <div className="screen container py-20">
+        <p className="text-ink-3">아직 발행된 글이 없습니다.</p>
         <Footer />
       </div>
     );
@@ -20,25 +20,19 @@ export default async function HomePage() {
 
   return (
     <div className="screen container">
-      <section style={{ padding: 'var(--s-16) 0 var(--s-12)' }}>
-        <div className="t-meta-up" style={{ marginBottom: 'var(--s-3)' }}>가장 최근 글</div>
-        <Link href={`/${catSlug(hero.category)}/${hero.slug}`} style={{ display: 'block', maxWidth: 620 }}>
-          <div style={{ marginBottom: 'var(--s-4)' }}><CatLabel cat={hero.category} /></div>
-          <h1
-            className="t-display"
-            style={{ fontSize: 'var(--t-3xl)', lineHeight: 1.12, letterSpacing: '-0.025em', margin: 0 }}
-          >
+      <section className="pt-16 pb-12">
+        <div className="t-meta-up mb-3">가장 최근 글</div>
+        <Link href={`/${catSlug(hero.category)}/${hero.slug}`} className="block max-w-[620px]">
+          <div className="mb-4"><CatLabel cat={hero.category} /></div>
+          <h1 className="t-display text-3xl leading-[1.12] tracking-[-0.025em] m-0">
             {hero.title}
           </h1>
           {hero.excerpt && (
-            <p style={{
-              marginTop: 'var(--s-4)', fontSize: 'var(--t-md)',
-              color: 'var(--ink-2)', lineHeight: 1.7, maxWidth: 540,
-            }}>
+            <p className="mt-4 text-md text-ink-2 leading-[1.7] max-w-[540px]">
               {hero.excerpt}
             </p>
           )}
-          <div className="card-meta" style={{ marginTop: 'var(--s-5)' }}>
+          <div className="card-meta mt-5">
             <span>{hero.publishedAt ? fmtDate(hero.publishedAt) : '—'}</span>
             <span className="dot" />
             <span>{hero.readMinutes}분</span>
@@ -50,13 +44,10 @@ export default async function HomePage() {
 
       <hr className="rule-soft" />
 
-      <section style={{ padding: 'var(--s-10) 0 0' }}>
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-          marginBottom: 'var(--s-4)',
-        }}>
-          <h2 className="t-display" style={{ margin: 0, fontSize: 'var(--t-xl)', whiteSpace: 'nowrap' }}>이전 글</h2>
-          <Link href="/knowledge" className="t-meta" style={{ borderBottom: '1px solid var(--ink-4)' }}>
+      <section className="pt-10">
+        <div className="flex justify-between items-baseline mb-4">
+          <h2 className="t-display m-0 text-xl whitespace-nowrap">이전 글</h2>
+          <Link href="/knowledge" className="t-meta border-b border-ink-4">
             전체 보기 →
           </Link>
         </div>

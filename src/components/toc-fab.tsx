@@ -27,7 +27,7 @@ export function TocFab({ items }: { items: TocItem[] }) {
           <div className="toc-fab-panel">
             <div className="toc-fab-head">
               <span>목차</span>
-              <span className="t-mono" style={{ color: 'var(--ink-4)', fontSize: 11 }}>{items.length}</span>
+              <span className="t-mono text-ink-4 text-[11px]">{items.length}</span>
             </div>
             <ul>
               {items.map((s) => (

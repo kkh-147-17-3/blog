@@ -28,15 +28,14 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: P
         <Link href="/admin/posts/new" className="btn solid">+ 새 글</Link>
       </header>
 
-      <form style={{ display: 'flex', gap: 'var(--s-3)', marginBottom: 'var(--s-5)', flexWrap: 'wrap' }}>
+      <form className="flex gap-3 mb-5 flex-wrap">
         <input
-          className="input"
+          className="input max-w-[280px]"
           name="q"
           defaultValue={sp.q ?? ''}
           placeholder="제목 검색…"
-          style={{ maxWidth: 280 }}
         />
-        <select className="input" name="cat" defaultValue={sp.cat ?? ''} style={{ maxWidth: 140 }}>
+        <select className="input max-w-[140px]" name="cat" defaultValue={sp.cat ?? ''}>
           <option value="">모든 카테고리</option>
           <option value="KNOWLEDGE">지식</option>
           <option value="DIARY">일기</option>
@@ -48,7 +47,7 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: P
         )}
       </form>
 
-      <div style={{ display: 'flex', gap: 'var(--s-2)', marginBottom: 'var(--s-5)' }}>
+      <div className="flex gap-2 mb-5">
         {tabs.map((t) => {
           const active = (sp.status ?? '') === (t.id ?? '');
           const params = new URLSearchParams();
@@ -59,8 +58,7 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: P
             <Link
               key={t.label}
               href={`/admin/posts?${params}`}
-              className={`btn ${active ? 'solid' : 'ghost'}`}
-              style={{ padding: '5px 14px' }}
+              className={`btn ${active ? 'solid' : 'ghost'} px-[14px] py-[5px]`}
             >
               {t.label}
             </Link>
@@ -91,7 +89,7 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: P
             </tr>
           ))}
           {posts.length === 0 && (
-            <tr><td colSpan={5} className="t-meta" style={{ textAlign: 'center', padding: 'var(--s-8) 0' }}>
+            <tr><td colSpan={5} className="t-meta text-center py-8">
               조건에 맞는 글이 없습니다.
             </td></tr>
           )}

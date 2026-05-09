@@ -293,7 +293,7 @@ export function TiptapEditor({ initialHtml, onChange }: Props) {
   };
 
   if (!editor) {
-    return <div style={{ color: 'var(--ink-3)', padding: 'var(--s-5) 0' }}>에디터 로딩 중…</div>;
+    return <div className="text-ink-3 py-5">에디터 로딩 중…</div>;
   }
 
   return (
@@ -335,7 +335,7 @@ export function TiptapEditor({ initialHtml, onChange }: Props) {
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        style={{ display: 'none' }}
+        className="hidden"
         onChange={onPickerChange}
       />
     </div>

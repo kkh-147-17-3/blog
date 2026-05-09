@@ -25,25 +25,19 @@ export default async function CategoryPage({ params }: { params: Promise<Params>
 
   return (
     <div className={wrap}>
-      <header style={{ padding: 'var(--s-16) 0 var(--s-8)' }}>
-        <div className="t-meta-up" style={{ marginBottom: 8 }}>CATEGORY</div>
-        <h1 className="t-display" style={{
-          margin: 0, fontSize: 'var(--t-3xl)',
-          letterSpacing: '-0.02em', display: 'flex', alignItems: 'baseline', gap: 14,
-        }}>
+      <header className="pt-16 pb-8">
+        <div className="t-meta-up mb-2">CATEGORY</div>
+        <h1 className="t-display m-0 text-3xl tracking-display flex items-baseline gap-[14px]">
           {CAT_LABEL[c]}
-          <span style={{
-            fontFamily: 'var(--font-mono)', fontSize: 'var(--t-md)',
-            fontWeight: 400, color: 'var(--ink-3)',
-          }}>{list.length}편</span>
+          <span className="font-mono text-md font-normal text-ink-3">{list.length}편</span>
         </h1>
-        <p style={{ margin: '8px 0 0', color: 'var(--ink-2)', fontSize: 'var(--t-md)' }}>
+        <p className="mt-2 mb-0 text-ink-2 text-md">
           {CAT_DESC[c]}
         </p>
       </header>
 
       {list.length === 0 ? (
-        <p style={{ padding: 'var(--s-8) 0', color: 'var(--ink-3)' }}>아직 글이 없습니다.</p>
+        <p className="py-8 text-ink-3">아직 글이 없습니다.</p>
       ) : c === 'KNOWLEDGE' ? (
         <KnowledgeList list={list} />
       ) : c === 'DIARY' ? (

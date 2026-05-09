@@ -22,16 +22,16 @@ export default async function AdminDashboardPage() {
         <Link href="/admin/posts/new" className="btn solid">+ 새 글</Link>
       </header>
 
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--s-3)', marginBottom: 'var(--s-8)' }}>
+      <section className="grid grid-cols-4 gap-3 mb-8">
         <Stat label="전체 글" num={counts.totalPosts} />
         <Stat label="발행" num={counts.published} />
         <Stat label="초안" num={counts.drafts} />
         <Stat label="댓글" num={counts.comments} />
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--s-6)' }}>
+      <section className="grid grid-cols-2 gap-6">
         <div>
-          <div className="t-meta-up" style={{ marginBottom: 'var(--s-3)' }}>최근 글</div>
+          <div className="t-meta-up mb-3">최근 글</div>
           <table className="admin-table">
             <tbody>
               {recent.map((p) => (
@@ -45,7 +45,7 @@ export default async function AdminDashboardPage() {
                 </tr>
               ))}
               {recent.length === 0 && (
-                <tr><td colSpan={4} className="t-meta" style={{ textAlign: 'center', padding: 'var(--s-6) 0' }}>
+                <tr><td colSpan={4} className="t-meta text-center py-6">
                   아직 글이 없습니다.
                 </td></tr>
               )}
@@ -54,20 +54,20 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div>
-          <div className="t-meta-up" style={{ marginBottom: 'var(--s-3)' }}>최근 댓글</div>
+          <div className="t-meta-up mb-3">최근 댓글</div>
           <div>
             {recentComments.map((c) => (
-              <div key={c.id} style={{ padding: 'var(--s-3) 0', borderTop: '1px solid var(--rule-soft)' }}>
-                <div className="card-meta" style={{ margin: 0, marginBottom: 4 }}>
-                  <strong style={{ color: 'var(--ink)', fontWeight: 500 }}>{c.authorName || '익명'}</strong>
+              <div key={c.id} className="py-3 border-t border-rule-soft">
+                <div className="card-meta m-0 mb-1">
+                  <strong className="text-ink font-medium">{c.authorName || '익명'}</strong>
                   <span className="dot" />
                   <span>{fmtDate(c.createdAt)}</span>
                 </div>
-                <div style={{ fontSize: 'var(--t-sm)', color: 'var(--ink-2)' }}>{c.content}</div>
+                <div className="text-sm text-ink-2">{c.content}</div>
               </div>
             ))}
             {recentComments.length === 0 && (
-              <div className="t-meta" style={{ padding: 'var(--s-6) 0' }}>아직 댓글이 없습니다.</div>
+              <div className="t-meta py-6">아직 댓글이 없습니다.</div>
             )}
           </div>
         </div>

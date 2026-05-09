@@ -28,13 +28,12 @@ export default async function AdminCommentsPage({ searchParams }: { searchParams
         </div>
       </header>
 
-      <div style={{ display: 'flex', gap: 'var(--s-2)', marginBottom: 'var(--s-5)' }}>
+      <div className="flex gap-2 mb-5">
         {tabs.map((t) => (
           <Link
             key={t.id}
             href={`/admin/comments?status=${t.id}`}
-            className={`btn ${status === t.id ? 'solid' : 'ghost'}`}
-            style={{ padding: '5px 14px' }}
+            className={`btn ${status === t.id ? 'solid' : 'ghost'} px-[14px] py-[5px]`}
           >
             {t.label}
           </Link>
@@ -43,31 +42,28 @@ export default async function AdminCommentsPage({ searchParams }: { searchParams
 
       <div>
         {comments.map((c) => (
-          <div key={c.id} style={{ padding: 'var(--s-4) 0', borderTop: '1px solid var(--rule-soft)' }}>
-            <div className="card-meta" style={{ margin: 0, marginBottom: 6 }}>
-              <strong style={{ color: 'var(--ink)', fontWeight: 500 }}>{c.authorName || '익명'}</strong>
+          <div key={c.id} className="py-4 border-t border-rule-soft">
+            <div className="card-meta m-0 mb-[6px]">
+              <strong className="text-ink font-medium">{c.authorName || '익명'}</strong>
               <span className="dot" />
               <span>{fmtDate(c.createdAt)}</span>
               {c.post && (
                 <>
                   <span className="dot" />
-                  <Link href={`/${catSlug(c.post.category)}/${c.post.slug}`} style={{ color: 'var(--ink-2)' }}>
+                  <Link href={`/${catSlug(c.post.category)}/${c.post.slug}`} className="text-ink-2">
                     {c.post.title}
                   </Link>
                 </>
               )}
             </div>
-            <div style={{
-              fontSize: 'var(--t-sm)', color: 'var(--ink-2)',
-              lineHeight: 1.7, whiteSpace: 'pre-wrap', marginBottom: 8,
-            }}>
+            <div className="text-sm text-ink-2 leading-[1.7] whitespace-pre-wrap mb-2">
               {c.content}
             </div>
             <CommentRow id={c.id} status={c.status} />
           </div>
         ))}
         {comments.length === 0 && (
-          <p className="t-meta" style={{ padding: 'var(--s-8) 0', textAlign: 'center' }}>
+          <p className="t-meta py-8 text-center">
             댓글이 없습니다.
           </p>
         )}

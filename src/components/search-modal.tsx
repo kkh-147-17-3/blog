@@ -66,7 +66,7 @@ export function SearchModal({ open, onClose, posts }: Props) {
         {!q && (
           <div className="modal-section">
             <div className="modal-section-head">최근 검색</div>
-            <div style={{ padding: '4px 12px', display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            <div className="flex gap-[6px] flex-wrap py-1 px-3">
               {['nextjs', '회고', '일기'].map((t) => (
                 <span key={t} className="chip" onClick={() => setQ(t)}>{t}</span>
               ))}
@@ -76,7 +76,7 @@ export function SearchModal({ open, onClose, posts }: Props) {
         <div className="modal-section">
           <div className="modal-section-head">{q ? `결과 ${matches.length}` : '추천'}</div>
           {matches.length === 0 && (
-            <div style={{ padding: '14px 12px', fontSize: 'var(--t-sm)', color: 'var(--ink-3)' }}>
+            <div className="px-3 py-[14px] text-sm text-ink-3">
               결과가 없습니다.
             </div>
           )}
@@ -88,7 +88,7 @@ export function SearchModal({ open, onClose, posts }: Props) {
               onClick={() => jump(p)}
             >
               <CatLabel cat={p.category} />
-              <span style={{ flex: 1 }}>{p.title}</span>
+              <span className="flex-1">{p.title}</span>
               <span className="meta">{p.publishedAt ? fmtDateShort(p.publishedAt) : '—'}</span>
             </button>
           ))}
