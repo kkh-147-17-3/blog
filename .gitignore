@@ -1,0 +1,16 @@
+node_modules
+.next
+out
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.production.local
+*.log
+.vercel
+next-env.d.ts
+
+# Supabase CLI local state
+supabase/.branches
+supabase/.temp
+supabase/.env

@@ -1,0 +1,36 @@
+# kh.log — Supabase project config
+# Replace `project_id` with your project ref (Supabase Dashboard → Settings → General → Reference ID)
+
+project_id = "fhuoxlduceegczdiqkal"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/admin"]
+jwt_expiry = 3600
+enable_signup = false  # admin-only blog — no public signups
+
+[auth.email]
+enable_signup = false
+double_confirm_changes = true
+enable_confirmations = false
+
+[storage]
+enabled = true
+file_size_limit = "5MiB"
