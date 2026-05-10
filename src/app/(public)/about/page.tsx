@@ -1,12 +1,18 @@
 import Link from 'next/link';
 import { CatLabel } from '@/components/cat-label';
 import { Footer } from '@/components/footer';
-import { getPublishedPosts } from '@/lib/queries';
+import { getPublishedPosts, getSiteSetting } from '@/lib/queries';
 import { CAT_DESC, CAT_LABEL, catSlug, fmtDateShort } from '@/lib/types';
 import type { Category } from '@/lib/types';
 
+const ABOUT_INTRO_FALLBACK =
+  '어제 자취방 천장에서 작은 거미 한 마리를 발견했는데,\n쫓아낼지 룸메로 받아들일지 아직 고민 중입니다.';
+
 export default async function AboutPage() {
-  const posts = await getPublishedPosts();
+  const [posts, intro] = await Promise.all([
+    getPublishedPosts(),
+    getSiteSetting('about_intro', ABOUT_INTRO_FALLBACK),
+  ]);
 
   const cats: { id: Category; title: string; sub: string; count: number }[] = (
     ['KNOWLEDGE', 'DIARY', 'MEMO'] as Category[]
@@ -31,9 +37,8 @@ export default async function AboutPage() {
         <h1 className="t-display m-0 text-3xl tracking-[-0.025em] max-w-[540px] leading-tight">
           이 블로그에 대하여
         </h1>
-        <p className="mt-5 max-w-[540px] text-md text-ink-2 leading-[1.85]">
-          여기에는 직접 만들면서 배운 것, 일상에서 짧게 본 것, 한참 머물렀던 문장 같은 걸
-          나눠 적습니다. 한 자리에 두면 어울리지 않을 글들이지만, 제 안에서는 같은 곳에서 나오는 것 같아요.
+        <p className="mt-5 max-w-[540px] text-md text-ink-2 leading-[1.85] whitespace-pre-line">
+          {intro}
         </p>
       </header>
 

@@ -93,6 +93,9 @@ export function PostEditor({ mode, initial }: Props) {
     contentHtml: initialHtml,
   });
 
+  const [tagsInput, setTagsInput] = useState(initial?.tags.join(', ') ?? '');
+  const parseTags = (s: string) => s.split(',').map((t) => t.trim()).filter(Boolean);
+
   const slug = state.slug || slugify(state.title);
 
   const submit = (overrideStatus?: PostStatus) => {
@@ -105,7 +108,7 @@ export function PostEditor({ mode, initial }: Props) {
     fd.set('category', state.category);
     fd.set('status', overrideStatus ?? state.status);
     fd.set('readMinutes', String(state.readMinutes));
-    fd.set('tags', state.tags.join(','));
+    fd.set('tags', parseTags(tagsInput).join(','));
 
     start(async () => {
       if (mode === 'new') {
@@ -250,11 +253,9 @@ export function PostEditor({ mode, initial }: Props) {
             <div className="label">태그 (쉼표로 구분)</div>
             <input
               className="input"
-              value={state.tags.join(', ')}
-              onChange={(e) => setState((s) => ({
-                ...s,
-                tags: e.target.value.split(',').map((t) => t.trim()).filter(Boolean),
-              }))}
+              value={tagsInput}
+              onChange={(e) => setTagsInput(e.target.value)}
+              onBlur={() => setTagsInput(parseTags(tagsInput).join(', '))}
               placeholder="nextjs, react, 회고"
             />
           </div>

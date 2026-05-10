@@ -5,7 +5,10 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug } = await params;
+  const { slug: raw } = await params;
+  let decoded = raw;
+  try { decoded = decodeURIComponent(raw); } catch { /* already decoded */ }
+  const slug = decoded.normalize('NFC');
   const body = await req.json().catch(() => ({}));
   const liked = Boolean(body.liked);
 

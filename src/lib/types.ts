@@ -38,9 +38,9 @@ export const CAT_LABEL: Record<Category, string> = {
 };
 
 export const CAT_DESC: Record<Category, string> = {
-  KNOWLEDGE: '직접 만들고 부딪히며 정리한 것',
-  DIARY: '하루의 정리',
-  MEMO: '짧게 남긴 인용·생각',
+  KNOWLEDGE: '아는 것이 힘이다. 모르는 게 약이다.',
+  DIARY: '오늘은 무슨일이 있었나',
+  MEMO: '잡다한 것들',
 };
 
 /** Lowercase slug — used in URLs and CSS classes (CSS rules + data-cat attr stay lowercase). */

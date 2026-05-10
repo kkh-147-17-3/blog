@@ -22,6 +22,7 @@ export function AdminSidebar({ email }: { email: string | null }) {
       {item('/admin', '대시보드')}
       {item('/admin/posts', '글')}
       {item('/admin/comments', '댓글')}
+      {item('/admin/site', '사이트 설정')}
 
       <div className="admin-nav-section">사이트</div>
       <Link href="/" className="admin-nav-link" target="_blank">공개 블로그 보기 ↗</Link>

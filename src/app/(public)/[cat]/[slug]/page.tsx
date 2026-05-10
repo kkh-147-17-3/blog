@@ -39,12 +39,13 @@ export default async function DetailPage({ params }: { params: Promise<Params> }
   ]);
 
   return (
-    <article className="screen container-wide pt-12">
+    <article className="screen mx-auto max-w-[1280px] px-6 pt-12">
       <DetailCatBinder cat={post.category} />
       <ViewPinger slug={post.slug} />
 
-      <div className="layout-detail grid grid-cols-[minmax(0,1fr)_200px] gap-16 items-start">
-        <div className="max-w-[640px] justify-self-center w-full">
+      <div className="layout-detail grid grid-cols-[200px_minmax(0,640px)_200px] gap-8 items-start justify-center">
+        <div className="layout-detail-spacer" aria-hidden />
+        <div className="w-full">
           <header className="mb-8">
             <div className="mb-4"><CatLabel cat={post.category} /></div>
             <h1 className="t-display m-0 text-3xl leading-[1.15] tracking-[-0.025em]">

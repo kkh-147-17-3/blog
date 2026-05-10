@@ -95,14 +95,28 @@ export async function getPublishedPosts(opts: { category?: Category; limit?: num
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   const supa = await createClient();
-  const { data, error } = await supa
+  // params.slug arrives percent-encoded in some Next.js routing paths; decode defensively.
+  let decoded = slug;
+  try { decoded = decodeURIComponent(slug); } catch { /* already decoded or malformed */ }
+  const nfc = decoded.normalize('NFC');
+  const { data } = await supa
     .from('posts')
     .select(POST_SELECT)
-    .eq('slug', slug)
+    .eq('slug', nfc)
     .eq('status', 'PUBLISHED')
     .maybeSingle();
-  if (error || !data) return null;
-  return mapPost(data as unknown as RawPost);
+  if (data) return mapPost(data as unknown as RawPost);
+
+  // Fallback: existing rows may have been stored in NFD (or any other normalization).
+  // Compare NFC-normalized slugs JS-side so legacy data still resolves.
+  const { data: candidates } = await supa
+    .from('posts')
+    .select(POST_SELECT)
+    .eq('status', 'PUBLISHED');
+  const found = (candidates as unknown as RawPost[] | null)?.find(
+    (p) => p.slug.normalize('NFC') === nfc,
+  );
+  return found ? mapPost(found) : null;
 }
 
 export async function getRelatedPosts(post: Post, limit = 2): Promise<Post[]> {
@@ -154,6 +168,19 @@ export const getSearchIndex = unstable_cache(
   ['search-index'],
   { tags: ['posts'], revalidate: 300 },
 );
+
+// ───── Site settings (key/value) ───────────────────────────────────
+
+export async function getSiteSetting(key: string, fallback = ''): Promise<string> {
+  const supa = await createClient();
+  const { data } = await supa
+    .from('site_settings')
+    .select('value')
+    .eq('key', key)
+    .maybeSingle();
+  const row = data as { value: string } | null;
+  return row?.value ?? fallback;
+}
 
 // ───── Admin read path ─────────────────────────────────────────────
 

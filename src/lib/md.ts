@@ -102,7 +102,8 @@ export function md2html(src: string): string {
 }
 
 export function slugify(s: string): string {
-  return s.toLowerCase()
+  return s.normalize('NFC')
+    .toLowerCase()
     .replace(/[^\p{L}\p{N}\s-]/gu, '')
     .trim()
     .replace(/\s+/g, '-')

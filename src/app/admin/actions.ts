@@ -45,7 +45,7 @@ interface PostInput {
 
 function readPostInput(fd: FormData): PostInput | { error: string } {
   const title = String(fd.get('title') ?? '').trim();
-  const slugRaw = String(fd.get('slug') ?? '').trim();
+  const slugRaw = String(fd.get('slug') ?? '').trim().normalize('NFC');
   const slug = slugRaw || slugify(title);
   const excerpt = String(fd.get('excerpt') ?? '').trim();
   const contentHtml = String(fd.get('contentHtml') ?? '');
@@ -148,6 +148,18 @@ export async function deletePost(id: string) {
   revalidatePath('/');
   revalidateTag('posts');
   redirect('/admin/posts');
+}
+
+export async function updateSiteSetting(key: string, fd: FormData) {
+  const { supa } = await requireAdmin();
+  const value = String(fd.get('value') ?? '');
+  const { error } = await supa
+    .from('site_settings')
+    .upsert({ key, value }, { onConflict: 'key' });
+  if (error) return { error: error.message };
+  revalidatePath('/about');
+  revalidatePath('/admin/site');
+  return { ok: true };
 }
 
 export async function setCommentStatus(id: string, status: CommentStatus) {

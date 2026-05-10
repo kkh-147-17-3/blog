@@ -235,6 +235,7 @@
     @apply font-display font-semibold text-lg leading-snug mt-8 mb-2;
   }
   .prose p { @apply m-0; }
+  .prose p:empty::before { content: '\00a0'; }
   .prose a {
     @apply border-b border-ink-4 transition-colors duration-150;
   }
@@ -748,7 +749,8 @@
     grid-template-columns: minmax(0, 1fr) !important;
     gap: 24px !important;
   }
-  .layout-detail > .toc-side { display: none !important; }
+  .layout-detail > .toc-side,
+  .layout-detail > .layout-detail-spacer { display: none !important; }
 
   .toc-fab {
     display: flex; align-items: center; justify-content: center;
@@ -886,6 +888,7 @@
 
 @media (min-width: 721px) and (max-width: 960px) {
   .layout-detail { grid-template-columns: minmax(0, 1fr) 160px !important; gap: 40px !important; }
+  .layout-detail > .layout-detail-spacer { display: none !important; }
   .layout-knowledge { grid-template-columns: minmax(0, 1fr) 160px !important; gap: 32px !important; }
 }
 
