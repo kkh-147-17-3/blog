@@ -214,6 +214,7 @@ export interface AdminPostEdit {
   status: PostStatus;
   readMinutes: number;
   tags: string[];
+  publishedAt: string | null;
 }
 
 function mapListItem(r: {
@@ -294,7 +295,7 @@ export async function getAdminPostForEdit(id: string): Promise<AdminPostEdit | n
   const supa = await createClient();
   const { data } = await supa
     .from('posts')
-    .select('id, slug, title, excerpt, content_html, content_md, category, status, read_minutes, post_tags ( tags ( name ) )')
+    .select('id, slug, title, excerpt, content_html, content_md, category, status, read_minutes, published_at, post_tags ( tags ( name ) )')
     .eq('id', id)
     .maybeSingle();
   if (!data) return null;
@@ -302,6 +303,7 @@ export async function getAdminPostForEdit(id: string): Promise<AdminPostEdit | n
     id: string; slug: string; title: string; excerpt: string | null;
     content_html: string | null; content_md: string | null;
     category: Category; status: PostStatus; read_minutes: number;
+    published_at: string | null;
     post_tags: unknown;
   };
   const row = data as unknown as Row;
@@ -322,6 +324,7 @@ export async function getAdminPostForEdit(id: string): Promise<AdminPostEdit | n
     status: row.status,
     readMinutes: row.read_minutes,
     tags,
+    publishedAt: row.published_at,
   };
 }
 

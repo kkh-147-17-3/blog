@@ -117,12 +117,12 @@ export default async function DetailPage({ params }: { params: Promise<Params> }
               </div>
             ))}
           </section>
-
-          <Footer />
         </div>
 
         <TocSide items={toc} likes={post.likes} views={post.views} />
       </div>
+
+      <Footer />
 
       <TocFab items={toc} />
     </article>

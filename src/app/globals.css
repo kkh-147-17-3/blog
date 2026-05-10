@@ -866,6 +866,9 @@
   .diary-row > div:last-child {
     padding-left: 16px !important;
   }
+  .diary-row .diary-dot {
+    left: -20px !important;
+  }
 
   .memo-row {
     grid-template-columns: 60px 1fr !important;

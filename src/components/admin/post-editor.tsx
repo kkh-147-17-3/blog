@@ -24,6 +24,7 @@ interface Initial {
   status: PostStatus;
   readMinutes: number;
   tags: string[];
+  publishedAt?: string | null;
 }
 
 interface Props {
@@ -40,7 +41,24 @@ const empty = {
   status: 'DRAFT' as PostStatus,
   readMinutes: 3,
   tags: [] as string[],
+  publishedAt: '',
 };
+
+// Convert ISO timestamp <-> <input type="datetime-local"> value (local time, no TZ).
+function isoToLocalInput(iso: string | null | undefined): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function localInputToIso(local: string): string {
+  if (!local) return '';
+  const d = new Date(local);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toISOString();
+}
 
 export function PostEditor({ mode, initial }: Props) {
   const router = useRouter();
@@ -89,6 +107,7 @@ export function PostEditor({ mode, initial }: Props) {
       status: initial.status,
       readMinutes: initial.readMinutes,
       tags: initial.tags,
+      publishedAt: isoToLocalInput(initial.publishedAt),
     }),
     contentHtml: initialHtml,
   });
@@ -109,6 +128,7 @@ export function PostEditor({ mode, initial }: Props) {
     fd.set('status', overrideStatus ?? state.status);
     fd.set('readMinutes', String(state.readMinutes));
     fd.set('tags', parseTags(tagsInput).join(','));
+    fd.set('publishedAt', localInputToIso(state.publishedAt));
 
     start(async () => {
       if (mode === 'new') {
@@ -202,6 +222,19 @@ export function PostEditor({ mode, initial }: Props) {
               <option value="PUBLISHED">발행</option>
               <option value="PRIVATE">비공개</option>
             </select>
+          </div>
+
+          <div className="field">
+            <div className="label">작성일자</div>
+            <input
+              className="input"
+              type="datetime-local"
+              value={state.publishedAt}
+              onChange={(e) => setState((s) => ({ ...s, publishedAt: e.target.value }))}
+            />
+            <div className="t-meta" style={{ marginTop: 4 }}>
+              발행 시 자동 입력됩니다. 직접 지정 가능.
+            </div>
           </div>
 
           <div className="field">

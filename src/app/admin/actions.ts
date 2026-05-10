@@ -41,6 +41,7 @@ interface PostInput {
   status: PostStatus;
   readMinutes: number;
   tags: string[];
+  publishedAt: string | null;
 }
 
 function readPostInput(fd: FormData): PostInput | { error: string } {
@@ -55,9 +56,17 @@ function readPostInput(fd: FormData): PostInput | { error: string } {
   const tags = String(fd.get('tags') ?? '')
     .split(',').map((t) => t.trim()).filter(Boolean).slice(0, 12);
 
+  const publishedAtRaw = String(fd.get('publishedAt') ?? '').trim();
+  let publishedAt: string | null = null;
+  if (publishedAtRaw) {
+    const d = new Date(publishedAtRaw);
+    if (Number.isNaN(d.getTime())) return { error: '작성일자가 올바르지 않습니다.' };
+    publishedAt = d.toISOString();
+  }
+
   if (!category) return { error: '카테고리가 올바르지 않습니다.' };
 
-  return { slug, title, excerpt, contentHtml, category, status, readMinutes, tags };
+  return { slug, title, excerpt, contentHtml, category, status, readMinutes, tags, publishedAt };
 }
 
 async function syncTags(supa: Awaited<ReturnType<typeof createClient>>, postId: string, tags: string[]) {
@@ -81,7 +90,10 @@ export async function createPost(fd: FormData) {
   if (!input.title) return { error: '제목을 입력해주세요.' };
 
   const html = addHeadingIds(input.contentHtml);
-  const published_at = input.status === 'PUBLISHED' ? new Date().toISOString() : null;
+  const published_at =
+    input.status === 'PUBLISHED'
+      ? input.publishedAt ?? new Date().toISOString()
+      : input.publishedAt;
 
   const { data, error } = await supa.from('posts').insert({
     slug: input.slug,
@@ -114,11 +126,18 @@ export async function updatePost(id: string, fd: FormData) {
   const { data: prev } = await supa.from('posts').select('status, published_at').eq('id', id).maybeSingle();
   const html = addHeadingIds(input.contentHtml);
   const prevRow = prev as { status?: PostStatus; published_at?: string | null } | null;
-  let published_at: string | null = prevRow?.published_at ?? null;
-  if (prevRow?.status !== 'PUBLISHED' && input.status === 'PUBLISHED') {
-    published_at = new Date().toISOString();
+  let published_at: string | null;
+  if (input.publishedAt !== null) {
+    // User explicitly chose a date — honor it regardless of status.
+    published_at = input.publishedAt;
+  } else if (input.status === 'PUBLISHED') {
+    // Publishing without a date set: keep prior value or stamp now on first publish.
+    published_at = prevRow?.status === 'PUBLISHED'
+      ? prevRow?.published_at ?? new Date().toISOString()
+      : new Date().toISOString();
+  } else {
+    published_at = null;
   }
-  if (input.status !== 'PUBLISHED') published_at = null;
 
   const { error } = await supa.from('posts').update({
     slug: input.slug,

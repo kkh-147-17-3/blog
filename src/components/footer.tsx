@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="footer container-wide">
+    <footer className="footer">
       <span>© {new Date().getFullYear()} kh.log · TRY · TEST · TIDY</span>
       <span className="links">
         <a href="/feed.xml">RSS</a>

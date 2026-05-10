@@ -46,11 +46,11 @@ export function DiaryTimeline({ list }: { list: Post[] }) {
                   className={`block relative pb-5 pt-3 ${i === 0 ? '' : 'border-t border-dashed border-rule-soft'}`}
                 >
                   <span
-                    className={`absolute w-2 h-2 rounded-full bg-cat-diary -left-[28.5px] ${i === 0 ? 'top-[18px]' : 'top-[22px]'}`}
+                    className="diary-dot absolute w-2 h-2 rounded-full bg-cat-diary -left-[28px] top-[18px]"
                   />
                   <div className="t-meta mb-1">
                     <span className="t-mono">{day}일</span>
-                    <span className="dot" />
+                    <span className="mx-2 text-ink-4">·</span>
                     <span>{p.readMinutes}분</span>
                   </div>
                   <div className="t-display text-lg font-medium tracking-[-0.015em] mb-1">{p.title}</div>

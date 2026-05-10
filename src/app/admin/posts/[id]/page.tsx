@@ -23,6 +23,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
         status: post.status,
         readMinutes: post.readMinutes,
         tags: post.tags,
+        publishedAt: post.publishedAt,
       }}
     />
   );
