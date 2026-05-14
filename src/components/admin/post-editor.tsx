@@ -1,11 +1,12 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPost, deletePost, updatePost } from '@/app/admin/actions';
 import { md2html, slugify } from '@/lib/md';
 import type { Category, PostStatus } from '@/lib/types';
+import { PreviewModal } from './preview-modal';
 
 const TiptapEditor = dynamic(
   () => import('./tiptap-editor').then((m) => m.TiptapEditor),
@@ -66,6 +67,15 @@ export function PostEditor({ mode, initial }: Props) {
   const [toast, setToast] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [fullscreen, setFullscreen] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const [autosaving, setAutosaving] = useState(false);
+  // Rerun the "N분 전" label every 30s so it stays fresh without re-saving.
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 30_000);
+    return () => clearInterval(id);
+  }, []);
 
   // Toggle <body class="editor-fullscreen"> so admin shell CSS can hide chrome.
   useEffect(() => {
@@ -117,6 +127,45 @@ export function PostEditor({ mode, initial }: Props) {
 
   const slug = state.slug || slugify(state.title);
 
+  // Autosave (edit mode only) — debounced 1500ms after the last edit.
+  // Skips the initial mount and any in-flight publish; only writes silently as DRAFT
+  // if the current status is already DRAFT, otherwise just updates the existing record.
+  const isFirstAutosave = useRef(true);
+  useEffect(() => {
+    if (mode !== 'edit' || !initial) return;
+    if (isFirstAutosave.current) { isFirstAutosave.current = false; return; }
+    const t = setTimeout(() => {
+      const fd = new FormData();
+      fd.set('title', state.title);
+      fd.set('slug', slug);
+      fd.set('excerpt', state.excerpt);
+      fd.set('contentHtml', state.contentHtml);
+      fd.set('category', state.category);
+      fd.set('status', state.status);
+      fd.set('readMinutes', String(state.readMinutes));
+      fd.set('tags', parseTags(tagsInput).join(','));
+      fd.set('publishedAt', localInputToIso(state.publishedAt));
+      setAutosaving(true);
+      updatePost(initial.id, fd)
+        .then(() => { setLastSavedAt(new Date()); })
+        .catch(() => { /* swallow — manual save still available */ })
+        .finally(() => setAutosaving(false));
+    }, 1500);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.title, state.contentHtml, state.excerpt, state.category, state.status, state.readMinutes, state.publishedAt, tagsInput]);
+
+  const savedLabel = (() => {
+    if (autosaving) return '저장 중…';
+    if (!lastSavedAt) return mode === 'edit' ? '대기 중' : null;
+    const sec = Math.max(0, Math.floor((Date.now() - lastSavedAt.getTime()) / 1000));
+    if (sec < 60) return '방금';
+    const min = Math.floor(sec / 60);
+    if (min < 60) return `${min}분 전`;
+    const hr = Math.floor(min / 60);
+    return `${hr}시간 전`;
+  })();
+
   const submit = (overrideStatus?: PostStatus) => {
     setErr(null);
     const fd = new FormData();
@@ -159,12 +208,21 @@ export function PostEditor({ mode, initial }: Props) {
           <h1>{state.title || (mode === 'new' ? '제목 없음' : '글 수정')}</h1>
         </div>
         <div className="flex gap-2 items-center">
+          {savedLabel && (
+            <span className="autosave" aria-live="polite" title="자동 저장">
+              <span className="autosave-dot" />
+              초안 자동저장됨 · {savedLabel}
+            </span>
+          )}
           {err && <span className="t-meta text-cat-diary">{err}</span>}
           {mode === 'edit' && !fullscreen && (
             <button type="button" className="btn ghost" onClick={() => router.push('/admin/posts')}>
               ← 목록
             </button>
           )}
+          <button type="button" className="btn ghost" onClick={() => setPreview(true)}>
+            미리보기
+          </button>
           <button
             type="button"
             className="btn ghost"
@@ -295,6 +353,15 @@ export function PostEditor({ mode, initial }: Props) {
         </aside>
       </div>
       {toast && <div className="toast">{toast}</div>}
+      {preview && (
+        <PreviewModal
+          title={state.title}
+          contentHtml={state.contentHtml}
+          category={state.category}
+          readMinutes={state.readMinutes}
+          onClose={() => setPreview(false)}
+        />
+      )}
     </>
   );
 }

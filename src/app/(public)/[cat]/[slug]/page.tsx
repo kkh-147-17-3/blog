@@ -8,6 +8,7 @@ import { LikeButton } from '@/components/like-button';
 import { ShareButtons } from '@/components/share-buttons';
 import { CommentForm } from '@/components/comment-form';
 import { DetailCatBinder } from '@/components/detail-cat-binder';
+import { ProseEnhancer } from '@/components/prose-enhancer';
 import { ViewPinger } from '@/components/view-pinger';
 import { getCommentsForPost, getPostBySlug, getRelatedPosts } from '@/lib/queries';
 import { extractToc, md2html } from '@/lib/md';
@@ -61,6 +62,7 @@ export default async function DetailPage({ params }: { params: Promise<Params> }
           </header>
 
           <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
+          <ProseEnhancer />
 
           <div className="mt-12 pt-6 border-t border-rule flex justify-between items-center flex-wrap gap-3">
             <div className="flex gap-2">

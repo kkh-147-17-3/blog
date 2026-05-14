@@ -17,6 +17,7 @@ import tippy, { type Instance, type Props as TippyProps } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import { SlashMenu, type SlashItem, type SlashMenuRef } from './slash-menu';
 import { ImageMenu } from './image-menu';
+import { Callout, Pullquote, LinkCard, Fold } from './prose-extensions';
 
 const lowlight = createLowlight(common);
 
@@ -51,21 +52,45 @@ function makeSlashItems(opts: {
 }): (q: { query: string }) => SlashItem[] {
   return ({ query }) => {
     const all: SlashItem[] = [
-      { title: '제목 1', hint: 'H2', command: () => editorRef.current?.chain().focus().toggleHeading({ level: 2 }).run() },
-      { title: '제목 2', hint: 'H3', command: () => editorRef.current?.chain().focus().toggleHeading({ level: 3 }).run() },
-      { title: '본문',   hint: 'P',  command: () => editorRef.current?.chain().focus().setParagraph().run() },
-      { title: '글머리 기호', hint: 'UL', command: () => editorRef.current?.chain().focus().toggleBulletList().run() },
-      { title: '번호 매기기', hint: 'OL', command: () => editorRef.current?.chain().focus().toggleOrderedList().run() },
-      { title: '체크리스트', hint: '✓',  command: () => editorRef.current?.chain().focus().toggleTaskList().run() },
-      { title: '인용',   hint: '"',  command: () => editorRef.current?.chain().focus().toggleBlockquote().run() },
-      { title: '코드블록', hint: '```', command: () => editorRef.current?.chain().focus().toggleCodeBlock().run() },
-      { title: '구분선', hint: '—',  command: () => editorRef.current?.chain().focus().setHorizontalRule().run() },
-      { title: '이미지', hint: '⬆',  command: () => opts.uploadImage() },
+      // 기본
+      { title: '제목 1', hint: 'H2', group: '기본', command: () => editorRef.current?.chain().focus().toggleHeading({ level: 2 }).run() },
+      { title: '제목 2', hint: 'H3', group: '기본', command: () => editorRef.current?.chain().focus().toggleHeading({ level: 3 }).run() },
+      { title: '본문',   hint: 'P',  group: '기본', command: () => editorRef.current?.chain().focus().setParagraph().run() },
+      { title: '글머리 기호', hint: 'UL', group: '기본', command: () => editorRef.current?.chain().focus().toggleBulletList().run() },
+      { title: '번호 매기기', hint: 'OL', group: '기본', command: () => editorRef.current?.chain().focus().toggleOrderedList().run() },
+      { title: '체크리스트', hint: '✓',  group: '기본', command: () => editorRef.current?.chain().focus().toggleTaskList().run() },
+      { title: '인용',   hint: '"',  group: '기본', command: () => editorRef.current?.chain().focus().toggleBlockquote().run() },
+      { title: '구분선', hint: '—',  group: '기본', command: () => editorRef.current?.chain().focus().setHorizontalRule().run() },
+      // 미디어
+      { title: '이미지', hint: '⬆', group: '미디어', command: () => opts.uploadImage() },
+      { title: '링크 카드', hint: '🔗', group: '미디어', command: () => {
+          const ed = editorRef.current; if (!ed) return;
+          const href = window.prompt('URL', 'https://') ?? '';
+          if (!href || href === 'https://') return;
+          const title = window.prompt('제목 (선택)', '') ?? '';
+          const desc  = window.prompt('설명 (선택)', '') ?? '';
+          ed.chain().focus().setLinkCard({ href, title, desc, url: href }).run();
+        } },
+      // 코드 · 데이터
+      { title: '코드블록', hint: '```', group: '코드·데이터', command: () => editorRef.current?.chain().focus().toggleCodeBlock().run() },
+      { title: '콜아웃 — 참고', hint: 'note', group: '코드·데이터', command: () => editorRef.current?.chain().focus().setCallout('note').run() },
+      { title: '콜아웃 — 주의', hint: 'warn', group: '코드·데이터', command: () => editorRef.current?.chain().focus().setCallout('warn').run() },
+      { title: '콜아웃 — 팁',   hint: 'tip',  group: '코드·데이터', command: () => editorRef.current?.chain().focus().setCallout('tip').run() },
+      { title: '풀쿼트 — 큰 발췌', hint: '"', group: '코드·데이터', command: () => {
+          const cite = window.prompt('출처 (선택)', '') ?? '';
+          editorRef.current?.chain().focus().setPullquote(cite).run();
+        } },
+      { title: '접기 — 곁가지 설명', hint: '▸', group: '코드·데이터', command: () => {
+          const summary = window.prompt('요약 제목', '자세히') ?? '자세히';
+          editorRef.current?.chain().focus().setFold(summary || '자세히').run();
+        } },
     ];
     if (!query) return all;
+    const q = query.toLowerCase();
     return all.filter((it) =>
-      it.title.toLowerCase().includes(query.toLowerCase()) ||
-      it.hint?.toLowerCase().includes(query.toLowerCase()),
+      it.title.toLowerCase().includes(q) ||
+      it.hint?.toLowerCase().includes(q) ||
+      it.group?.toLowerCase().includes(q),
     );
   };
 }
@@ -137,6 +162,10 @@ export function TiptapEditor({ initialHtml, onChange }: Props) {
       CodeBlockLowlight.configure({ lowlight, defaultLanguage: 'ts' }),
       TaskList,
       TaskItem.configure({ nested: true }),
+      Callout,
+      Pullquote,
+      LinkCard,
+      Fold,
       SlashCommand.configure({
         suggestion: {
           char: '/',
